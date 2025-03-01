@@ -3,6 +3,9 @@
 @theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-monserrat: var(--font-monserrat);
+  
+  --color-primary: #FF7590;
 }
 
 :root {
