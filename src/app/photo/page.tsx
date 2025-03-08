@@ -4,8 +4,10 @@ import ModalFinish from "@/components/Modal";
 import React, { useRef, useState, useEffect } from 'react';
 import ModalPhotoPreview from "@/components/ModalPhoto";
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 export default function Photo() {
+  const {back} = useRouter()
   const videoRef = useRef<any>(null);
   const [stream, setStream] = useState<any>(null);
   const [devices, setDevices] = useState<any>([]);
@@ -161,7 +163,7 @@ export default function Photo() {
       <ModalFinish 
         show={showModal || timer === 0}
         message="Waktu dalam mengambil foto sudah habis"
-        onClick={() => window.location.href = "http://localhost:3000"}
+        onClick={back}
       />
       <ModalPhotoPreview 
         show={showModalPhotoPreview}

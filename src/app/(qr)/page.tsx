@@ -5,18 +5,20 @@ import { useRouter } from 'next/navigation'
 import QrScanner from 'qr-scanner';
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import axios from 'axios'
+import { useFullscreen } from "@/context/FullscreenContext";
 
 export default function QR() {
-  const {replace} = useRouter()
+  const {push} = useRouter()
   const [scanResult, setScanResult] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState('')
   const videoRef = useRef(null);
   const scannerRef = useRef<any>(null);
+  const {isFullscreen, fullscreenSupported, toggleFullscreen} = useFullscreen()
 
   useEffect(() => {
     //@ts-ignore
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && isFullscreen) {
       startScanner()
     }
 
@@ -25,7 +27,7 @@ export default function QR() {
         scannerRef.current.stop();
       }
     };
-  }, []);
+  }, [isFullscreen]);
 
   const startScanner = async () => {
     if (!videoRef.current) return;
@@ -51,18 +53,45 @@ export default function QR() {
     }
   };
 
-  const checkQR = async (payload: any) => {
+  const checkQR = async (data: any) => {
     try {
       setError('')
       setIsScanning(false);
-      await new Promise((res) => setTimeout(() => res(''), 500))
-      replace('/photo')
+      const qrData = JSON.parse(data.data)
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_REMOTE_SERVER}/transactions/${qrData.transactionId}/start-session`, {}, {
+        headers: {
+          'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
+        }
+      })
+      
+      if (!res.data || !res.data.data || !res.data.data.status || res.data.data.status !== 'in_booth', res.data.data.status !== 'in_booth') {
+        throw new Error('')
+      }
+      push('/photo')
     } catch (ex: any) {
       setError('QR code tidak valid.')
       setIsScanning(true);
     } finally {
       setScanResult('')
     }
+  }
+
+  if (!isFullscreen && fullscreenSupported) {
+    return (
+      <main className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10">
+        <h1 className="text-white font-bold text-3xl">
+          Ask for Full Screen
+        </h1>
+        <button
+            className="rounded-3xl bg-primary py-1 px-8 cursor-pointer"
+            onClick={toggleFullscreen}
+          >
+            <span className="text-white font-bold text-lg">
+              Allow Full Screen
+            </span>
+          </button>
+      </main>
+    )
   }
 
   return (
@@ -103,8 +132,8 @@ export default function QR() {
         }
       
         {error.length &&
-          <p className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-base font-semibold text-red-500 text-center">
-            {error} QR code tidak valid
+          <p className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-base font-semibold text-red-400 text-center">
+            {error}
           </p>
         }
       </div>
