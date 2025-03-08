@@ -1,3 +1,4 @@
+import deletePicture from "@/server/controllers/deletePicture";
 import listPictures from "../../controllers/listPicture";
 import takePicture from "../../controllers/takePicture";
 import uploadPictures from "../../controllers/uploadPictures";
@@ -7,6 +8,7 @@ export const pictureRoutes = (router: Router) => {
   router.get('/capture', takePicture);
   router.get('/list', listPictures);
   router.post('/upload', uploadPictures);
+  router.delete('/:filename', deletePicture);
 }
 
 export default pictureRoutes;
