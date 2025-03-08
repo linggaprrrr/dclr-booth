@@ -34,3 +34,49 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Docker and GitHub Container Registry
+
+This project includes a Dockerfile and GitHub Actions workflow to build and push the Docker image to GitHub Container Registry.
+
+### Building the Docker Image Locally
+
+To build the Docker image locally:
+
+```bash
+docker build -t dclr-photoboot .
+```
+
+To run the Docker image locally:
+
+```bash
+docker run -p 3000:3000 dclr-photoboot
+```
+
+### GitHub Actions Workflow
+
+The GitHub Actions workflow will automatically build and push the Docker image to GitHub Container Registry when:
+
+1. You push to the `main` branch
+2. You create a pull request to the `main` branch
+3. You manually trigger the workflow
+
+The Docker image will be available at `ghcr.io/[your-username]/dclr-photoboot`.
+
+### Pulling the Docker Image
+
+To pull the Docker image from GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/[your-username]/dclr-photoboot:latest
+```
+
+Replace `[your-username]` with your GitHub username.
+
+### Required GitHub Permissions
+
+The GitHub Actions workflow requires the following permissions:
+- `contents: read` - To read the repository contents
+- `packages: write` - To push the Docker image to GitHub Container Registry
+
+These permissions are already configured in the workflow file.
