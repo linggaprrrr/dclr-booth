@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from "path";
 
 const listPictures = async (_req: Request, res: Response) => {
-  const uploadsDir = path.join(__dirname, "uploads");
+  const uploadsDir = path.join(process.cwd(), "public/uploads");
   fs.readdir(uploadsDir, (err, files) => {
     if (err) {
       console.error("Error reading uploads directory:", err);
