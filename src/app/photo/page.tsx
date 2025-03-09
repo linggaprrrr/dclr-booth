@@ -95,7 +95,7 @@ export default function Photo() {
 
   const onTakePict = async () => {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_PHOTOBOOT_SERVER}/api/capture`, {})
+      const res = await axios.get(`/api/capture`, {})
       setPhoto(`${process.env.NEXT_PUBLIC_PHOTOBOOT_SERVER}${res.data.file.path}`)
       setShowModalPhotoPreview(prev => !prev)
     } catch (ex) {

@@ -82,10 +82,12 @@ export async function capturePhoto(options: string | CaptureOptions = {}): Promi
     // Enable viewfinder
     await execAsync('gphoto2 --set-config viewfinder=1');
 
-    // Ensure uploads directory exists
+    // Ensure uploads directory exists with proper permissions
     const uploadsDir = directory || path.join(__dirname, 'uploads');
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
+      // Set directory permissions to 777 (read, write, execute for all)
+      fs.chmodSync(uploadsDir, 0o777);
     }
 
     const photoFilename = filename || `photo-${Date.now()}.jpg`;
@@ -104,6 +106,9 @@ export async function capturePhoto(options: string | CaptureOptions = {}): Promi
     if (!fs.existsSync(filepath)) {
       throw new Error('Photo capture failed: File not created');
     }
+    
+    // Set file permissions to 666 (read, write for all)
+    fs.chmodSync(filepath, 0o666);
     
     return filepath;
   } catch (error) {
@@ -148,7 +153,15 @@ export async function listCameras(): Promise<Camera[]> {
 
 export const listPictures = async (): Promise<{ filename: string, path: string }[]> => {
   try {
-    const uploadsDir = path.join(__dirname, "uploads");
+    const uploadsDir = path.join(process.cwd(), "public/uploads");
+    
+    // Create directory if it doesn't exist and set proper permissions
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+      // Set directory permissions to 777 (read, write, execute for all)
+      fs.chmodSync(uploadsDir, 0o777);
+    }
+    
     const files = await fs.promises.readdir(uploadsDir);
     
     const photos = files
