@@ -96,21 +96,37 @@ export default function Photo() {
   const onTakePict = async () => {
     try {
       const res = await axios.get(`/api/capture`, {})
-      setPhoto(`${process.env.NEXT_PUBLIC_PHOTOBOOT_SERVER}${res.data.file.path}`)
+      setPhoto(`${window.location.origin}/${res.data.file.path}`)
       setShowModalPhotoPreview(prev => !prev)
     } catch (ex) {
     }
   }
 
-  const onAbort = () => {
+  const onAbort = async () => {
+    try {
+      const photoSplit = photo.split('/')
+      await axios.delete(`/api/${photoSplit[photoSplit.length-1]}`)
+      setPhoto('')
+    } catch (ex) {
+      console.log(`ERROR when delete ${ex}`)
+    } finally {
+      setShowModalPhotoPreview(prev => !prev)
+    }
+  }
+
+  const onAgree = async () => {
     setPhoto('')
     setShowModalPhotoPreview(prev => !prev)
   }
 
-  const onAgree = () => {
-    setPhoto('')
-    setShowModalPhotoPreview(prev => !prev)
-    // do something to api
+  const onUpload = async () => {
+    try {
+      await axios.post(`/api/upload`)
+    } catch (ex) {
+      console.log(`ERROR when finish - upload ${ex}`)
+    } finally {
+      back()
+    }
   }
 
   return (
@@ -133,7 +149,7 @@ export default function Photo() {
         <div className="absolute top-0 w-screen h-screen">
           <video 
             ref={videoRef} 
-            className="w-full h-full bg-black object-contain"
+            className="w-full h-full bg-black object-fill"
             autoPlay 
             playsInline
             onCanPlay={() => videoRef.current?.play()}
@@ -163,7 +179,7 @@ export default function Photo() {
       <ModalFinish 
         show={showModal || timer === 0}
         message="Waktu dalam mengambil foto sudah habis"
-        onClick={back}
+        onClick={onUpload}
       />
       <ModalPhotoPreview 
         show={showModalPhotoPreview}

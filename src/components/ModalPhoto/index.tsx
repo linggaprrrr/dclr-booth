@@ -48,12 +48,12 @@ const ModalPhotoPreview: React.FC<Props> = (props) => {
   return (
     <div className="fixed top-0 w-screen h-screen backdrop-blur-sm flex justify-center items-center z-[1000]">        
         
-        <div className="bg-black w-screen h-screen">
+        <div className="bg-black w-screen h-screen flex justify-center items-center">
           <img 
             src={props.photo || ''}
             alt="photo preview"
-            className="object-contain"
-          />  
+            className="object-contain w-[90%] h-full"
+          /> 
         </div>
 
         <div className="absolute bottom-0 w-full px-4 py-4 flex justify-between">
