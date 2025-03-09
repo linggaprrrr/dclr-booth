@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import next from 'next';
 import cors from 'cors';
-import bodyParser from 'body-parser';
+import * as bodyParser from 'body-parser';
 import { apiRoutes } from './routes/index';
 
 const dev = process.env.NODE_ENV !== 'production';
