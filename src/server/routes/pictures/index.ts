@@ -1,4 +1,4 @@
-import deletePicture from "@/server/controllers/deletePicture";
+import deletePicture from "../../controllers/deletePicture";
 import listPictures from "../../controllers/listPicture";
 import takePicture from "../../controllers/takePicture";
 import uploadPictures from "../../controllers/uploadPictures";
