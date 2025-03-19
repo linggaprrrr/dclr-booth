@@ -1,4 +1,12 @@
-FROM node:20-alpine AS base
+# Use a base image that supports gphoto2
+FROM node:20-bullseye AS base
+
+# Install gphoto2 and its dependencies
+RUN apt-get update && apt-get install -y \
+  gphoto2 \
+  libgphoto2-dev \
+  libusb-1.0-0-dev \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies only when needed
 FROM base AS deps
