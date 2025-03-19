@@ -1,7 +1,7 @@
 'use client'
 
 import ModalFinish from "@/components/Modal";
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import ModalPhotoPreview from "@/components/ModalPhoto";
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
@@ -19,6 +19,7 @@ export default function Photo() {
   const [showModal, setShowModal] = useState(false)
   const [showModalPhotoPreview, setShowModalPhotoPreview] = useState(false)
   const [photo, setPhoto] = useState('')
+  const [totalPhoto, setTotalPhoto] = useState(0)
 
   useEffect(() => {
     async function getDevices() {
@@ -96,7 +97,7 @@ export default function Photo() {
   const onTakePict = async () => {
     try {
       const res = await axios.get(`/api/capture`, {})
-      setPhoto(`${window.location.origin}/${res.data.file.path}`)
+      setPhoto(res.data.file.path)
       setShowModalPhotoPreview(prev => !prev)
     } catch (ex) {
     }
@@ -117,6 +118,7 @@ export default function Photo() {
   const onAgree = async () => {
     setPhoto('')
     setShowModalPhotoPreview(prev => !prev)
+    setTotalPhoto(prevState => prevState + 1)
   }
 
   const onUpload = async () => {
@@ -129,12 +131,18 @@ export default function Photo() {
     }
   }
 
+  const finishWordingMemo = useMemo(() => {
+    if (totalPhoto === 40) return "Jumlah pengambilan foto sudah terpenuhi"
+    if (timer === 0) return  "Waktu dalam mengambil foto sudah habis"
+    return "Kamu telah menyelesaikan pengambilan foto"
+  }, [timer, totalPhoto])
+
   return (
     <>
       <main className="flex flex-col w-screen h-screen bg-black py-4">
         <div className="absolute top-0 w-full px-4 py-2 flex justify-end z-[100]">
-          <div className="flex flex-col items-center gap-2 p-4 bg-black rounded">
-            <div className="rounded-3xl bg-primary py-1 px-8">
+          <div className="flex flex-col items-center gap-2 p-4 bg-gray-500 rounded-tl rounded-bl">
+            <div className="rounded bg-primary py-1 px-8">
               <span className="text-white font-bold text-lg">
                 Waktu Foto
               </span>
@@ -142,6 +150,17 @@ export default function Photo() {
 
             <span className="text-white font-bold text-2xl">
               {formatTime(timer)}
+            </span>
+          </div>
+          <div className="flex flex-col items-center gap-2 p-4 pl-0 bg-gray-500 rounded-tr rounded-br">
+            <div className="rounded bg-primary py-1 px-8">
+              <span className="text-white font-bold text-lg">
+                Total Foto
+              </span>
+            </div>
+
+            <span className="text-white font-bold text-2xl">
+              {totalPhoto} / 40
             </span>
           </div>
         </div>
@@ -177,8 +196,8 @@ export default function Photo() {
         </div>
       </main>
       <ModalFinish 
-        show={showModal || timer === 0}
-        message="Waktu dalam mengambil foto sudah habis"
+        show={showModal || timer === 0 || totalPhoto === 40}
+        message={finishWordingMemo}
         onClick={onUpload}
       />
       <ModalPhotoPreview 
