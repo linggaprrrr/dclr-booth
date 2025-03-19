@@ -3,6 +3,7 @@ import next from 'next';
 import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import { apiRoutes } from './routes/index';
+import path from 'path'
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -16,6 +17,7 @@ app.prepare().then(() => {
   server.use(cors());
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
+  server.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
   // API routes
   server.use('/api', apiRoutes);

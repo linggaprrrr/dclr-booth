@@ -6,7 +6,7 @@ import { capturePhoto } from "../services/camera";
 const takePicture = async (req: Request, res: Response) => {
   try {
     // Ensure uploads directory exists with proper permissions
-    const uploadsDir = path.join(process.cwd(), "public/uploads");
+    const uploadsDir = path.join(process.cwd(), "uploads");
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
       // Set directory permissions to 777 (read, write, execute for all)
