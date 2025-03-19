@@ -4,20 +4,21 @@ FROM node:20-alpine AS base
 FROM base AS deps
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json* ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+
+# First copy all files except node_modules
 COPY . .
+
+# Then copy node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
 
 # Build Next.js app
 RUN npm run build
@@ -26,21 +27,28 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV PORT 3000
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Set the correct permission for prerender cache
+RUN addgroup --system --gid 1001 nodejs && \
+  adduser --system --uid 1001 nextjs && \
+  mkdir .next && \
+  chown nextjs:nodejs .next
 
 # Copy necessary files from builder
-COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-COPY --from=builder /app/tsconfig.server.json ./tsconfig.server.json
+
+# Use standalone output if available, otherwise use the regular .next directory
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Switch to non-root user
+USER nextjs
 
 # Expose the port the app will run on
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"] 
+CMD ["node", "server.js"] 
