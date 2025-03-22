@@ -155,7 +155,7 @@ export default function Photo() {
   return (
     <>
       <main className="flex flex-col w-screen h-screen bg-black py-4">
-        <div className="absolute left-[-120px] top-[120px] px-4 py-2 flex z-[100] -rotate-90">
+        <div className="absolute top-6 w-full px-4 py-2 flex justify-end  z-[100]">
           <div className="flex flex-col items-center gap-2 p-4 bg-gray-500 rounded-tl rounded-bl">
             <div className="rounded bg-primary py-1 px-8">
               <span className="text-white font-bold text-lg">
@@ -180,7 +180,7 @@ export default function Photo() {
           </div>
         </div>
 
-        <div className="absolute top-0 w-screen h-screen">
+        <div className="absolute top-0 w-screen h-screen rotate-90" style={{width: window.innerHeight}}>
           <video 
             ref={videoRef} 
             className="w-full h-full bg-black object-fill"

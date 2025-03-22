@@ -65,7 +65,6 @@ export default function QR() {
           'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
         }
       })
-
       if (!res.data || !res.data.data || !res.data.data.status || res.data.data.status !== 'in_booth', res.data.data.status !== 'in_booth') {
         throw new Error('')
       }
@@ -106,7 +105,7 @@ export default function QR() {
       <div className="w-[30%] h-[40%] relative rounded-xl">
         <video 
           ref={videoRef}
-          className="w-full h-full object-cover rounded-xl rotate-180" />
+          className="w-full h-full object-cover rounded-xl -rotate-90" />
         
         {(!isScanning && scanResult) &&
           <div 
