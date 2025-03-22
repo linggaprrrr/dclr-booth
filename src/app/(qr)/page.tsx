@@ -6,6 +6,7 @@ import QrScanner from 'qr-scanner';
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import axios from 'axios'
 import { useFullscreen } from "@/context/FullscreenContext";
+import { useData } from "@/context/DataContext";
 
 export default function QR() {
   const {push} = useRouter()
@@ -15,6 +16,7 @@ export default function QR() {
   const videoRef = useRef(null);
   const scannerRef = useRef<any>(null);
   const {isFullscreen, fullscreenSupported, toggleFullscreen} = useFullscreen()
+  const {setTransactionId} = useData()
 
   useEffect(() => {
     //@ts-ignore
@@ -63,10 +65,11 @@ export default function QR() {
           'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
         }
       })
-      
+
       if (!res.data || !res.data.data || !res.data.data.status || res.data.data.status !== 'in_booth', res.data.data.status !== 'in_booth') {
         throw new Error('')
       }
+      setTransactionId(qrData.transactionId)
       push('/photo')
     } catch (ex: any) {
       setError('QR code tidak valid.')
@@ -103,7 +106,7 @@ export default function QR() {
       <div className="w-[30%] h-[40%] relative rounded-xl">
         <video 
           ref={videoRef}
-          className="w-full h-full object-cover rounded-xl" />
+          className="w-full h-full object-cover rounded-xl rotate-180" />
         
         {(!isScanning && scanResult) &&
           <div 

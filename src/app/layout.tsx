@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import "./globals.css";
 import { FullscreenProvider } from "@/context/FullscreenContext";
+import { DataProvider } from "@/context/DataContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,9 @@ export default function RootLayout({
         className={`${montserrat.variable} ${geistMono.variable} antialiased`}
       >
         <FullscreenProvider>
-          {children}
+          <DataProvider>
+            {children}
+          </DataProvider>
         </FullscreenProvider>
       </body>
     </html>
