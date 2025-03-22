@@ -5,6 +5,7 @@ import React, { useRef, useState, useEffect, useMemo } from 'react';
 import ModalPhotoPreview from "@/components/ModalPhoto";
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { useData } from "@/context/DataContext";
 
 export default function Photo() {
   const {back} = useRouter()
@@ -13,13 +14,14 @@ export default function Photo() {
   const [devices, setDevices] = useState<any>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState('');
   const [error, setError] = useState('');
-  const [timer, setTimer] = useState(600)
+  const [timer, setTimer] = useState(10)
   const timerRef = useRef<any>(null);
   const keepAliveIntervalRef = useRef<any>(null);
   const [showModal, setShowModal] = useState(false)
   const [showModalPhotoPreview, setShowModalPhotoPreview] = useState(false)
   const [photo, setPhoto] = useState('')
   const [totalPhoto, setTotalPhoto] = useState(0)
+   const {transactionId} = useData()
 
   useEffect(() => {
     async function getDevices() {
@@ -123,7 +125,12 @@ export default function Photo() {
 
   const onUpload = async () => {
     try {
-      await axios.post(`/api/upload`)
+      await axios.post(`/api/upload`, {transactionId: transactionId})
+      await axios.put(`${process.env.NEXT_PUBLIC_REMOTE_SERVER}/transactions/${transactionId}/complete-session`, {}, {
+        headers: {
+          'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
+        }
+      })
     } catch (ex) {
       console.log(`ERROR when finish - upload ${ex}`)
     } finally {
@@ -140,7 +147,7 @@ export default function Photo() {
   return (
     <>
       <main className="flex flex-col w-screen h-screen bg-black py-4">
-        <div className="absolute top-0 w-full px-4 py-2 flex justify-end z-[100]">
+        <div className="absolute left-[-120px] top-[120px] px-4 py-2 flex z-[100] -rotate-90">
           <div className="flex flex-col items-center gap-2 p-4 bg-gray-500 rounded-tl rounded-bl">
             <div className="rounded bg-primary py-1 px-8">
               <span className="text-white font-bold text-lg">
@@ -176,23 +183,23 @@ export default function Photo() {
         </div>
 
         <div className="absolute bottom-0 w-full px-4 py-4 flex justify-between">
-          <button
+          {/* <button
             className="rounded-3xl bg-primary py-1 px-8 cursor-pointer"
             onClick={onTakePict}
           >
             <span className="text-white font-bold text-lg">
               AMBIL FOTO
             </span>
-          </button>
+          </button> */}
 
-          <button 
+          {/* <button 
             className="rounded-3xl bg-primary py-1 px-8 cursor-pointer"
             onClick={onFinish}
           >
             <span className="text-white font-bold text-lg">
               SELESAI
             </span>
-          </button>
+          </button> */}
         </div>
       </main>
       <ModalFinish 
