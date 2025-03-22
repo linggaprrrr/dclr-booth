@@ -17,12 +17,12 @@ const ModalFinish: React.FC<Props> = (props) => {
           {props.message}
         </p>
 
-        <button 
+        {/* <button 
           className="rounded-full bg-[#FFB5C0] py-2 px-8 text-white font-bold text-lg cursor-pointer"
           onClick={props.onClick}
         >
           SELESAI
-        </button>
+        </button> */}
       </div>
     </div>
   )

@@ -14,7 +14,7 @@ export default function Photo() {
   const [devices, setDevices] = useState<any>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState('');
   const [error, setError] = useState('');
-  const [timer, setTimer] = useState(10)
+  const [timer, setTimer] = useState(600)
   const timerRef = useRef<any>(null);
   const keepAliveIntervalRef = useRef<any>(null);
   const [showModal, setShowModal] = useState(false)
@@ -83,6 +83,14 @@ export default function Photo() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (showModal || timer === 0 || totalPhoto === 40) {
+      setTimeout(() => {
+        onUpload()
+      }, 1000)
+    }
+  }, [showModal, timer, totalPhoto])
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
