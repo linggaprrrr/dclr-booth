@@ -153,7 +153,7 @@ export async function listCameras(): Promise<Camera[]> {
 
 export const listPictures = async (): Promise<{ filename: string, path: string }[]> => {
   try {
-    const uploadsDir = path.join(process.cwd(), "public/uploads");
+    const uploadsDir = path.join(process.cwd(), "uploads");
     
     // Create directory if it doesn't exist and set proper permissions
     if (!fs.existsSync(uploadsDir)) {
