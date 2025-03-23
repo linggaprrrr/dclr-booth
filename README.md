@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## ENV (TEMP ONLY)
+NEXT_PUBLIC_REMOTE_SERVER=https://reka-api-dev.service.beta-point.ranggaa.me
+
+API_URL=https://reka-api-dev.service.beta-point.ranggaa.me
+API_KEY=sHCEtVx2mVXIa6ZUkigfd
+
+
 ## Getting Started
 
 First, run the development server:
