@@ -80,13 +80,16 @@ export default function QR() {
 
   if (!isFullscreen && fullscreenSupported) {
     return (
-      <main className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10">
+      <main 
+        className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10"
+        onClick={toggleFullscreen}
+      >
         <h1 className="text-white font-bold text-3xl">
           Ask for Full Screen
         </h1>
         <button
             className="rounded-3xl bg-primary py-1 px-8 cursor-pointer"
-            onClick={toggleFullscreen}
+            // onClick={toggleFullscreen}
           >
             <span className="text-white font-bold text-lg">
               Allow Full Screen
@@ -97,7 +100,10 @@ export default function QR() {
   }
 
   return (
-    <main className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10">
+    <main 
+      className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10"
+      style={{cursor: isFullscreen ? 'none' : ''}}
+    >
       <h1 className="text-white font-bold text-3xl">
         Scan QR Code
       </h1>
