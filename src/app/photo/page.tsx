@@ -168,7 +168,7 @@ export default function Photo() {
   return (
     <>
       <main 
-        className="flex flex-col w-screen h-screen bg-black py-4"
+        className="flex flex-col w-screen h-screen bg-black py-4 bg-white"
         style={{cursor: isFullscreen ? 'none' : ''}}
         onClick={handleClick}
       >
@@ -198,12 +198,13 @@ export default function Photo() {
         </div>
 
         <div 
-          className="absolute top-0 w-screen h-screen rotate-90" 
-          style={{width}}
+          className="absolute top-0 -left-[210px] h-screen rotate-90" 
+          style={{ height: width, width}}
         >
           <video 
             ref={videoRef} 
-            className="w-full h-full bg-black object-fill"
+            // className="w-full h-full bg-black object-fill"
+            className="w-full h-full"
             autoPlay 
             playsInline
             onCanPlay={() => videoRef.current?.play()}
@@ -237,7 +238,9 @@ export default function Photo() {
       />
       <ModalPhotoPreview 
         show={showModalPhotoPreview}
+        // show={false}
         photo={photo}
+        // photo="http://localhost:3000/uploads/photo-1742748306493.jpg"
         onAbort={onAbort}
         onAgree={onAgree}
       />

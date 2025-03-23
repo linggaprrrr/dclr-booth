@@ -52,8 +52,8 @@ const ModalPhotoPreview: React.FC<Props> = (props) => {
           <img 
             src={props.photo || ''}
             alt="photo preview"
-            className="object-contain rotate-90 aspect-[2/3]"
-            style={{height: window ? window.innerWidth : 0}}
+            className="object-contain aspect-[2/3]"
+            // style={{height: window ? window.innerWidth : 0}}
           /> 
         </div>
 
