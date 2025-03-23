@@ -48,6 +48,8 @@ export async function setupCamera(): Promise<boolean> {
     // Set USB permissions (for Linux/Unix systems)
     try {
       await execAsync('sudo chmod 777 /dev/usb/*, /dev/bus/usb/*/*');
+      //allow photo to write into folder by default without ask permission
+      await execAsync('sudo chmod 777 uploads');
     } catch (error) {
       // Ignore errors as paths might not exist on all systems
       console.debug('USB permission setting skipped - paths may not exist on this system');
