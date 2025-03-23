@@ -16,6 +16,9 @@ const ModalFinish: React.FC<Props> = (props) => {
         <p className="text-white font-medium text-2xl text-center">
           {props.message}
         </p>
+        <p className="text-white font-medium text-2xl text-center">
+          Menyimpan...
+        </p>
 
         {/* <button 
           className="rounded-full bg-[#FFB5C0] py-2 px-8 text-white font-bold text-lg cursor-pointer"
