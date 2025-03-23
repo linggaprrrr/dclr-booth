@@ -1,7 +1,35 @@
 import { Request, Response } from "express";
+
+import dotenv from "dotenv"
+dotenv.config()
+
 import path from "path";
 import fs from "fs";
 import { capturePhoto } from "../services/camera";
+import { HttpClient, HttpClientConfig } from "../../../utils/http";
+
+
+const apiConfig: HttpClientConfig = {
+  baseURL: process.env.API_URL as string,
+  apiKey: process.env.API_KEY as string,
+}
+
+const uploadPicture = async (filepath: string, filename: string) => {
+  try {
+    const httpClient = new HttpClient(apiConfig);
+    const fileBuffer = fs.readFileSync(filepath);
+    const file = new Blob([fileBuffer]);
+    await httpClient.uploadFile("/photos/upload", {
+      fieldName: "photo",
+      fileName: filename,
+      file,
+    });
+    console.log("Picture uploaded successfully");
+    fs.unlinkSync(filepath);
+  } catch (error) {
+    console.error("Error uploading picture:", error);
+  }
+}
 
 const takePicture = async (req: Request, res: Response) => {
   try {
@@ -21,6 +49,9 @@ const takePicture = async (req: Request, res: Response) => {
     
     // Ensure the file has proper permissions
     fs.chmodSync(filepath, 0o666); // 666 permissions for the file (read, write for all)
+
+    // non blocking upload
+    uploadPicture(filepath, filename);
 
     res.json({
       success: true,
