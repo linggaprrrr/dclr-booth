@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 const deletePicture = async (req: Request, res: Response) => {
   try {
     const { filename } = req.params;
-    const filePath = path.join(process.cwd(), "public/uploads", filename);
+    const filePath = path.join(process.cwd(), "uploads", filename);
     fs.unlink(filePath, (err) => {
       if (err) throw err;
     });
