@@ -1,5 +1,10 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## ENV PROD
+
+API_HOST=https://dclr-api.digitalcreativelab.id
+API_KEY=1edd8a8400dc9fb35cfa47cda191238e63927fe80072657b4eb3e1206d7dd459
+
 ## ENV (TEMP ONLY)
 NEXT_PUBLIC_REMOTE_SERVER=https://reka-api-dev.service.beta-point.ranggaa.me
 
