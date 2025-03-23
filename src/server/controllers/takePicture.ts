@@ -14,7 +14,7 @@ const apiConfig: HttpClientConfig = {
   apiKey: process.env.API_KEY as string,
 }
 
-const uploadPicture = async (filepath: string, filename: string) => {
+const uploadPicture = async (filepath: string, filename: string, trxId: string) => {
   try {
     const httpClient = new HttpClient(apiConfig);
     const fileBuffer = fs.readFileSync(filepath);
@@ -23,6 +23,9 @@ const uploadPicture = async (filepath: string, filename: string) => {
       fieldName: "photo",
       fileName: filename,
       file,
+      additionalData: {
+        transactionId: trxId,
+      },
     });
     console.log("Picture uploaded successfully");
     fs.unlinkSync(filepath);
@@ -51,7 +54,7 @@ const takePicture = async (req: Request, res: Response) => {
     fs.chmodSync(filepath, 0o666); // 666 permissions for the file (read, write for all)
 
     // non blocking upload
-    uploadPicture(filepath, filename);
+    uploadPicture(filepath, filename, req.params.id);
 
     res.json({
       success: true,

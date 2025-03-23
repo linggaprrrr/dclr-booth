@@ -5,7 +5,7 @@ import uploadPictures from "../../controllers/uploadPictures";
 import { Router } from "express";
 
 export const pictureRoutes = (router: Router) => {
-  router.get('/capture', takePicture);
+  router.get('/capture/:id', takePicture);
   router.get('/list', listPictures);
   router.post('/upload', uploadPictures);
   router.delete('/:filename', deletePicture);
