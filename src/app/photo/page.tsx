@@ -6,6 +6,7 @@ import ModalPhotoPreview from "@/components/ModalPhoto";
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useData } from "@/context/DataContext";
+import { useFullscreen } from "@/context/FullscreenContext";
 
 export default function Photo() {
   const {back} = useRouter()
@@ -21,7 +22,13 @@ export default function Photo() {
   const [showModalPhotoPreview, setShowModalPhotoPreview] = useState(false)
   const [photo, setPhoto] = useState('')
   const [totalPhoto, setTotalPhoto] = useState(0)
-   const {transactionId} = useData()
+  const {transactionId} = useData()
+  const {isFullscreen} = useFullscreen()
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    setWidth(window.innerHeight);
+  }, []);
 
   useEffect(() => {
     async function getDevices() {
@@ -92,6 +99,11 @@ export default function Photo() {
     }
   }, [showModal, timer, totalPhoto])
 
+  const handleClick = () => {
+    if (showModalPhotoPreview || showModal || timer === 0 || totalPhoto === 40) return
+    onTakePict()
+  };
+
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -105,10 +117,12 @@ export default function Photo() {
   }
 
   const onTakePict = async () => {
+    if (showModal || timer === 0 || totalPhoto === 40) return
     try {
       const res = await axios.get(`/api/capture`, {})
       setPhoto(res.data.file.path)
       setShowModalPhotoPreview(prev => !prev)
+      setTotalPhoto(prevState => prevState + 1)
     } catch (ex) {
     }
   }
@@ -128,7 +142,6 @@ export default function Photo() {
   const onAgree = async () => {
     setPhoto('')
     setShowModalPhotoPreview(prev => !prev)
-    setTotalPhoto(prevState => prevState + 1)
   }
 
   const onUpload = async () => {
@@ -154,7 +167,11 @@ export default function Photo() {
 
   return (
     <>
-      <main className="flex flex-col w-screen h-screen bg-black py-4">
+      <main 
+        className="flex flex-col w-screen h-screen bg-black py-4"
+        style={{cursor: isFullscreen ? 'none' : ''}}
+        onClick={handleClick}
+      >
         <div className="absolute top-6 w-full px-4 py-2 flex justify-end  z-[100]">
           <div className="flex flex-col items-center gap-2 p-4 bg-gray-500 rounded-tl rounded-bl">
             <div className="rounded bg-primary py-1 px-8">
@@ -180,7 +197,10 @@ export default function Photo() {
           </div>
         </div>
 
-        <div className="absolute top-0 w-screen h-screen rotate-90" style={{width: window.innerHeight}}>
+        <div 
+          className="absolute top-0 w-screen h-screen rotate-90" 
+          style={{width}}
+        >
           <video 
             ref={videoRef} 
             className="w-full h-full bg-black object-fill"
