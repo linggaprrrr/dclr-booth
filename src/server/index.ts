@@ -17,7 +17,7 @@ app.prepare().then(() => {
   server.use(cors());
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
-  server.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+  server.use('/uploads', express.static(path.join(process.cwd(), 'uploads')))
 
   // API routes
   server.use('/api', apiRoutes);
