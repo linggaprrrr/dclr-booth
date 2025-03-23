@@ -30,6 +30,11 @@ const uploadPictures = async (req: Request, res: Response) => {
       });
     }));
 
+    // Remove all photos after all uploads are complete
+    photos.forEach((photo) => {
+      fs.unlinkSync(path.join(__dirname, "..", "..", "..", photo.path));
+    });
+
     res.status(200).json({
       success: true,
       message: "Photos uploaded successfully",
