@@ -6,7 +6,7 @@ NEXT_PUBLIC_REMOTE_SERVER=https://reka-api-dev.service.beta-point.ranggaa.me
 API_URL=https://reka-api-dev.service.beta-point.ranggaa.me
 API_KEY=sHCEtVx2mVXIa6ZUkigfd
 
-
+transform: `translate(${(width - height) / 2}px, ${(height - width) / 2}px) rotate(90deg)`
 ## Getting Started
 
 First, run the development server:
