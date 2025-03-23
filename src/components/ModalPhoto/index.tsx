@@ -9,12 +9,12 @@ interface Props {
 }
 
 const ModalPhotoPreview: React.FC<Props> = (props) => {
-  const [timer, setTimer] = useState(5)
+  const [timer, setTimer] = useState(1)
   const timerRef = useRef<any>(null);
 
   useEffect(() => {
     if (props.show) {
-      setTimer(5)
+      setTimer(1)
       timerRef.current = setInterval(() => {
         setTimer((prevTime) => {
           if (prevTime <= 1) {
@@ -52,11 +52,12 @@ const ModalPhotoPreview: React.FC<Props> = (props) => {
           <img 
             src={props.photo || ''}
             alt="photo preview"
-            className="object-contain w-[90%] h-full"
+            className="object-contain rotate-90 aspect-[2/3]"
+            style={{height: window ? window.innerWidth : 0}}
           /> 
         </div>
 
-        <div className="absolute bottom-0 w-full px-4 py-4 flex justify-between">
+        {/* <div className="absolute bottom-0 w-full px-4 py-4 flex justify-between">
           <button 
             className="rounded-full bg-primary py-2 px-8 text-white font-bold text-lg cursor-pointer"
             onClick={props.onAbort}
@@ -71,7 +72,7 @@ const ModalPhotoPreview: React.FC<Props> = (props) => {
             ({timer}){' '}
             PILIH
           </button>
-        </div>
+        </div> */}
     </div>
   )
 }
