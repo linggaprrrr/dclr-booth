@@ -1,4 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DCLR Photoshoot Application
+
+A web application for capturing and uploading photos with robust queue processing.
+
+## Features
+
+- Photo capture and management
+- Reliable upload queue with retry capability
+- Fault-tolerant file processing
+- Robust error handling
+
+## Technical Architecture
+
+### Upload Queue System
+
+The application uses Bull.js for managing a robust upload queue:
+
+- **Reliable Processing**: Each upload is processed as a job with configurable retry logic
+- **Exponential Backoff**: Failed uploads are retried with increasing delays
+- **Concurrent Processing**: Multiple uploads can be processed simultaneously
+- **Persistent Queue**: Jobs remain in queue even if server restarts
+- **Monitoring**: Comprehensive logging of job statuses
+
+### Prerequisites
+
+- Node.js (v16+)
+- Redis server (for Bull.js queue)
+- Camera hardware (for photo capture)
+
+## Setup
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/dclr-photoboot.git
+   cd dclr-photoboot
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Configure the application:
+   ```
+   cp .env.example .env
+   ```
+   Edit `.env` with your specific configuration.
+
+4. Start Redis server:
+   ```
+   redis-server
+   ```
+
+5. Run the application:
+   ```
+   npm run dev
+   ```
+
+## Queue Configuration
+
+The upload queue system can be configured via environment variables:
+
+- `REDIS_URL`: Connection URL for the Redis server
+- `UPLOAD_MAX_RETRIES`: Maximum retry attempts for failed uploads (default: 5)
+- `UPLOAD_RETRY_DELAY`: Base delay in ms between retries (default: 5000)
+- `UPLOAD_CONCURRENCY`: Maximum concurrent uploads (default: 5)
+
+## API Endpoints
+
+- `POST /api/photos/take/:id`: Capture a photo and queue for upload
+- `POST /api/photos/upload`: Upload all pending photos
+
+## Development
+
+### Architecture Overview
+
+The upload queue system consists of:
+
+- `queue.ts`: Core queue implementation with Bull.js
+- `takePicture.ts`: Controller for capturing individual photos
+- `uploadPictures.ts`: Controller for bulk uploading photos
+
+### Best Practices
+
+- All uploads are queued for reliable processing
+- Failed uploads are automatically retried with exponential backoff
+- File cleanup happens automatically after successful upload or final failure
+- Comprehensive error handling at all levels
+- Detailed logging for monitoring and debugging
+
+## License
+
+[MIT License](LICENSE)
 
 ## ENV PROD
 

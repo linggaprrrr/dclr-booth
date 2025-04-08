@@ -67,7 +67,7 @@ export async function setupCamera(): Promise<boolean> {
  * @param options Capture options including camera port, filename, and directory
  * @returns Promise that resolves to the filepath of the captured image
  */
-export async function capturePhoto(options: string | CaptureOptions = {}): Promise<string> {
+export async function capturePhoto(options: string | CaptureOptions = {}, trxId: string): Promise<string> {
   try {
     // Handle legacy string parameter (cameraPort)
     const opts: CaptureOptions = typeof options === 'string' 
@@ -85,7 +85,7 @@ export async function capturePhoto(options: string | CaptureOptions = {}): Promi
     await execAsync('gphoto2 --set-config viewfinder=1');
 
     // Ensure uploads directory exists with proper permissions
-    const uploadsDir = directory || path.join(__dirname, 'uploads');
+    const uploadsDir = directory || path.join(__dirname, 'uploads', trxId);
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
       // Set directory permissions to 777 (read, write, execute for all)

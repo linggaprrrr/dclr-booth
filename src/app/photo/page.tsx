@@ -17,7 +17,6 @@ export default function Photo() {
   const [error, setError] = useState('');
   const [timer, setTimer] = useState(600)
   const timerRef = useRef<any>(null);
-  const keepAliveIntervalRef = useRef<any>(null);
   const [showModal, setShowModal] = useState(false)
   const [showModalPhotoPreview, setShowModalPhotoPreview] = useState(false)
   const [photo, setPhoto] = useState('')
