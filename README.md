@@ -102,6 +102,7 @@ NEXT_PUBLIC_REMOTE_SERVER=https://reka-api-dev.service.beta-point.ranggaa.me
 
 API_URL=https://reka-api-dev.service.beta-point.ranggaa.me
 API_KEY=sHCEtVx2mVXIa6ZUkigfd
+REDIS_URL=redis://default:aWpgPYLQpyvvm9ugovfU4a7U0U73He4njJra635soQq1a9zO8TlffFdCj1PxATh8@154.26.130.254:63309/0
 
 transform: `translate(${(width - height) / 2}px, ${(height - width) / 2}px) rotate(90deg)`
 ## Getting Started
