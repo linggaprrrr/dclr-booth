@@ -153,7 +153,7 @@ export async function listCameras(): Promise<Camera[]> {
   }
 }
 
-export const listPictures = async (): Promise<{ filename: string, path: string }[]> => {
+export const listPictures = async (trxId: string): Promise<{ filename: string, path: string }[]> => {
   try {
     const uploadsDir = path.join(process.cwd(), "uploads");
     
@@ -170,7 +170,7 @@ export const listPictures = async (): Promise<{ filename: string, path: string }
       .filter((file) => /\.(jpg|jpeg|png)$/i.test(file))
       .map((filename) => ({
         filename,
-        path: `/uploads/${filename}`,
+        path: `/uploads/${trxId}/${filename}`,
       }));
 
     return photos;

@@ -30,7 +30,7 @@ if (!apiConfig.baseURL || !apiConfig.apiKey) {
 }
 
 // Create queue instance once (outside of routes)
-const uploadQueue = createUploadQueue(apiConfig);
+const uploadQueue = createUploadQueue();
 
 /**
  * Controller to handle taking a picture and queueing it for upload
@@ -53,7 +53,7 @@ const takePicture = async (req: Request, res: Response): Promise<void> => {
     const trxId = req.params.id;
     const uploadsDir = path.join(process.cwd(), "uploads", trxId);
     await ensureDirectoryExists(uploadsDir);
-
+    console.log('upload dir', uploadsDir)
     // Capture photo with the camera service
     const filepath = await capturePhoto({
       directory: uploadsDir

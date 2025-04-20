@@ -37,15 +37,15 @@ export default function Photo() {
         
         // Then get the list of devices
         const deviceList = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = deviceList.filter(device => device.kind === 'videoinput');
+        const videoDevices = deviceList.filter(device => device.kind === 'videoinput').find((v: any) => v.label.includes("usb video"));
         setDevices(videoDevices);
+        console.log(videoDevices)
         
-        if (videoDevices.length > 0) {
-          setSelectedDeviceId(videoDevices[0].deviceId);
-
+        if (videoDevices) {
+          setSelectedDeviceId(videoDevices.deviceId);
           const newStream = await navigator.mediaDevices.getUserMedia({
             video: {
-              deviceId: { exact: videoDevices[0].deviceId },
+              deviceId: { exact: videoDevices.deviceId },
               width: { ideal: 1280 },
               height: { ideal: 720 }
             }
@@ -118,6 +118,7 @@ export default function Photo() {
   }
 
   const onTakePict = async () => {
+    console.log('----',transactionId)
     // if (showModal || timer === 0 || totalPhoto === 40) return
     if (showModal || timer === 0) return
     try {
@@ -198,52 +199,30 @@ export default function Photo() {
             </span>
           </div> */}
         </div>
-
-        <div 
-          className="absolute top-0 -left-[275px] h-screen rotate-90" 
-          style={{ height: width, width}}
-        >
-          <video 
-            ref={videoRef} 
-            // className="w-full h-full bg-black object-fill"
-            className="w-full h-full"
-            autoPlay 
-            playsInline
-            onCanPlay={() => videoRef.current?.play()}
-          />
-        </div>
-
-        <div className="absolute bottom-0 w-full px-4 py-4 flex justify-between">
-          {/* <button
-            className="rounded-3xl bg-primary py-1 px-8 cursor-pointer"
-            onClick={onTakePict}
-          >
-            <span className="text-white font-bold text-lg">
-              AMBIL FOTO
-            </span>
-          </button> */}
-
-          {/* <button 
-            className="rounded-3xl bg-primary py-1 px-8 cursor-pointer"
-            onClick={onFinish}
-          >
-            <span className="text-white font-bold text-lg">
-              SELESAI
-            </span>
-          </button> */}
-        </div>
+          <img 
+            className="absolute h-screen w-screen top-0 left-0 brightness-80"
+            src="/bg.png"
+            alt="bacgkroud image" />  
+          
+          <div className="absolute top-0 left-0 h-screen w-screen flex justify-center items-center">
+            <video 
+              ref={videoRef} 
+              className="w-auto h-[1000px] max-w-none object-contain rotate-90"
+              autoPlay 
+              playsInline
+              onCanPlay={() => videoRef.current?.play()}
+            />
+          </div>
       </main>
-      <ModalFinish 
-        // show={showModal || timer === 0 || totalPhoto === 40}
+
+      <ModalFinish
         show={showModal || timer === 0}
         message={finishWordingMemo}
         onClick={onUpload}
       />
       <ModalPhotoPreview 
         show={showModalPhotoPreview}
-        // show={false}
         photo={photo}
-        // photo="http://localhost:3000/uploads/photo-1742748306493.jpg"
         onAbort={onAbort}
         onAgree={onAgree}
       />

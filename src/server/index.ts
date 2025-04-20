@@ -4,6 +4,11 @@ import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import { apiRoutes } from './routes/index';
 import path from 'path'
+import fs from 'fs';
+import { ExpressAdapter } from '@bull-board/express';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { createBullBoard } from '@bull-board/api';
+import { uploadPhotoQueue } from './services/queue';
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -17,10 +22,33 @@ app.prepare().then(() => {
   server.use(cors());
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
-  server.use('/uploads', express.static(path.join(process.cwd(), 'uploads')))
+  server.use('/uploads/:trxId/:fileName', (req, res) => {
+    let trxId = req.params.trxId
+    let fileName = req.params.fileName
+
+    let filepath = path.join(process.cwd(), 'uploads', trxId, fileName)
+
+    if (fs.existsSync(filepath)) {
+      return res.sendFile(filepath)
+    }
+    return res.status(404).send('File rangga not found')
+  })
+  server.use('/uploads/:trxId', express.static(path.join(process.cwd(), 'uploads')))
 
   // API routes
   server.use('/api', apiRoutes);
+
+  const serverAdapter = new ExpressAdapter();
+  serverAdapter.setBasePath('/admin/queues');
+
+  const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
+    queues: [
+      new BullAdapter(uploadPhotoQueue)
+    ],
+    serverAdapter: serverAdapter,
+  });
+  
+  server.use('/admin/queues', serverAdapter.getRouter());
 
   // Example API endpoint
   server.get('/api/hello', (req: Request, res: Response) => {

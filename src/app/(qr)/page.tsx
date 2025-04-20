@@ -15,21 +15,58 @@ export default function QR() {
   const [error, setError] = useState('')
   const videoRef = useRef(null);
   const scannerRef = useRef<any>(null);
+  const [selectedDeviceId, setSelectedDeviceId] = useState('')
   const {isFullscreen, fullscreenSupported, toggleFullscreen} = useFullscreen()
   const {setTransactionId} = useData()
+  const [cameraPermissionError, setCameraPermissionError] = useState('')
+  let streamObject: any = null
 
   useEffect(() => {
-    //@ts-ignore
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && isFullscreen) {
-      startScanner()
-    }
+    initCameraPermission(navigator, isFullscreen)
 
-    return () => {
+    return () => { 
       if (scannerRef.current) {
         scannerRef.current.stop();
       }
     };
   }, [isFullscreen]);
+
+  useEffect(() => {
+    if (!selectedDeviceId) return
+    startScanner()
+  }, [selectedDeviceId])
+
+  const initCameraPermission = async (navigator: any, isFullscreen: any) => {
+    //@ts-ignore
+    await askCamerPermission()
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && isFullscreen) {
+      navigator.mediaDevices.enumerateDevices().then((devices: any) => {
+        const webCam: any = devices.filter((v: any) => v.kind === "videoinput").find((v: any) => v.label.includes("USB Camera") || v.label.includes("UVC"))
+        console.log(devices)
+        if (webCam) {
+          setSelectedDeviceId(webCam.deviceId)
+        }
+      })
+    }
+  }
+
+  const askCamerPermission = async () => {
+    setCameraPermissionError('')
+    try {
+      streamObject = await navigator.mediaDevices.getUserMedia({video: true})
+    } catch (ex: any) {
+      if (ex.name === "NotAllowedError") {
+        return setCameraPermissionError('Camera access was denied. Please enable it in your browser settings.')
+      }
+
+      if (ex.name === 'NotFoundError') {
+        return setCameraPermissionError('No camera found. Please check your device.')
+      }
+
+      setCameraPermissionError('An unexpected error occurred while trying to access the camera.')
+    }
+  }
 
   const startScanner = async () => {
     if (!videoRef.current) return;
@@ -47,6 +84,7 @@ export default function QR() {
           onDecodeError: error => {},
           highlightScanRegion: true,
           highlightCodeOutline: true,
+          preferredCamera: selectedDeviceId
         }
       );
       await scannerRef.current.start();
@@ -57,10 +95,11 @@ export default function QR() {
 
   const checkQR = async (data: any) => {
     try {
+      console.log(data)
       setError('')
       setIsScanning(false);
-      const qrData = JSON.parse(data.data)
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_REMOTE_SERVER}/transactions/${qrData.transactionId}/start-session`, {}, {
+      const qrData = data.data
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_REMOTE_SERVER}/transactions/${qrData}/start-session`, {}, {
         headers: {
           'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
         }
@@ -68,7 +107,7 @@ export default function QR() {
       if (!res.data || !res.data.data || !res.data.data.status || res.data.data.status !== 'in_booth', res.data.data.status !== 'in_booth') {
         throw new Error('')
       }
-      setTransactionId(qrData.transactionId)
+      setTransactionId(qrData)
       push('/photo')
     } catch (ex: any) {
       setError('QR code tidak valid.')
@@ -108,10 +147,10 @@ export default function QR() {
         Scan QR Code
       </h1>
 
-      <div className="w-[30%] h-[40%] relative rounded-xl">
+      <div className="w-[50%] h-[30%] relative rounded-xl">
         <video 
           ref={videoRef}
-          className="w-full h-full object-cover rounded-xl -rotate-90" />
+          className="w-full h-full object-cover rounded-xl -scale-x-100" />
         
         {(!isScanning && scanResult) &&
           <div 
@@ -139,12 +178,60 @@ export default function QR() {
           </div>
         }
       
-        {error.length &&
+        {(error.length || cameraPermissionError.length) ?
           <p className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-base font-semibold text-red-400 text-center">
-            {error}
+            {error || cameraPermissionError}
           </p>
+          : null
         }
       </div>
     </main>
+
+    // <main 
+    //   className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10"
+    //   style={{cursor: isFullscreen ? 'none' : ''}}
+    // >
+    //   <h1 className="text-white font-bold text-3xl">
+    //     Scan QR Code
+    //   </h1>
+
+    //   <div className="w-[30%] h-[40%] relative rounded-xl">
+    //     <video 
+    //       ref={videoRef}
+    //       className="w-full h-full object-cover rounded-xl -rotate-90" />
+        
+    //     {(!isScanning && scanResult) &&
+    //       <div 
+    //         className={`
+    //           absolute 
+    //           top-0 
+    //           backdrop-blur-lg 
+    //           bg-white/20 
+    //           border 
+    //           border-white/30 
+    //           rounded-xl 
+    //           w-full 
+    //           h-full
+    //           flex
+    //           justify-center
+    //           items-center
+    //         `}
+    //       >
+    //         <LoadingSpinner 
+    //           size={64} 
+    //           strokeWidth={6} 
+    //           color="#FF7590" 
+    //           secondaryColor="#fff"
+    //           speed={0} />
+    //       </div>
+    //     }
+      
+    //     {error.length &&
+    //       <p className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-base font-semibold text-red-400 text-center">
+    //         {error}
+    //       </p>
+    //     }
+    //   </div>
+    // </main>
   )
 }

@@ -28,7 +28,7 @@ if (!apiConfig.baseURL || !apiConfig.apiKey) {
 }
 
 // Create queue instance once (outside of routes)
-const uploadQueue = createUploadQueue(apiConfig);
+const uploadQueue = createUploadQueue();
 
 /**
  * Controller to handle bulk upload of pictures
@@ -50,7 +50,7 @@ const uploadPictures = async (req: Request, res: Response): Promise<void> => {
   let queuedCount = 0;
 
   try {
-    const photos = await listPictures();
+    const photos = await listPictures(req.body.transactionId);
     
     if (photos.length === 0) {
       res.status(200).json({
