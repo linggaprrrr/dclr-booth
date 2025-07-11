@@ -9,6 +9,7 @@ import { ExpressAdapter } from '@bull-board/express';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { createBullBoard } from '@bull-board/api';
 import { uploadPhotoQueue } from './services/queue';
+import transactionDetail from './controllers/transactionDetail';
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -47,6 +48,8 @@ app.prepare().then(() => {
     ],
     serverAdapter: serverAdapter,
   });
+
+  server.get('/trx/:trxId', transactionDetail);
   
   server.use('/admin/queues', serverAdapter.getRouter());
 

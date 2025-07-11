@@ -9,25 +9,63 @@ import { useData } from "@/context/DataContext";
 import { useFullscreen } from "@/context/FullscreenContext";
 
 export default function Photo() {
-  const {back} = useRouter()
+  const {back, push} = useRouter()
   const videoRef = useRef<any>(null);
   const [stream, setStream] = useState<any>(null);
   const [devices, setDevices] = useState<any>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState('');
   const [error, setError] = useState('');
-  const [timer, setTimer] = useState(600)
+  const [timer, setTimer] = useState(0) // Changed from 600 to 0 as initial value
   const timerRef = useRef<any>(null);
   const [showModal, setShowModal] = useState(false)
   const [showModalPhotoPreview, setShowModalPhotoPreview] = useState(false)
   const [photo, setPhoto] = useState('')
+  const [transactionData, setTransactionData] = useState<any>(null) // Added state for transaction data
+  const [isLoadingTransaction, setIsLoadingTransaction] = useState(true) // Added loading state
   // const [totalPhoto, setTotalPhoto] = useState(0)
   const {transactionId} = useData()
   const {isFullscreen} = useFullscreen()
   const [width, setWidth] = useState(0);
 
+  // Check if transactionId exists, if not redirect to QR page
+  useEffect(() => {
+    if (!transactionId || transactionId.trim() === '') {
+      push('/');
+      return;
+    }
+  }, [transactionId, push]);
+
   useEffect(() => {
     setWidth(window.innerHeight);
   }, []);
+
+  // Added useEffect to fetch transaction details
+  useEffect(() => {
+    if (!transactionId) return;
+    
+    const fetchTransactionDetails = async () => {
+      try {
+        setIsLoadingTransaction(true);
+        const response = await axios.get(`/trx/${transactionId}`);
+        const data = response.data;
+        
+        if (data && data.data && data.data.plan) {
+          setTransactionData(data.data);
+          // Set timer from plan's durationSecond
+          const durationInSeconds = data.data.plan.durationSecond || 600; // fallback to 600 if not available
+          setTimer(durationInSeconds);
+        }
+      } catch (error) {
+        console.error('Error fetching transaction details:', error);
+        // Fallback to default timer if API call fails
+        setTimer(600);
+      } finally {
+        setIsLoadingTransaction(false);
+      }
+    };
+
+    fetchTransactionDetails();
+  }, [transactionId]);
 
   useEffect(() => {
     async function getDevices() {
@@ -71,16 +109,19 @@ export default function Photo() {
     };
   }, []);
 
+  // Modified useEffect to start timer only when transaction data is loaded and timer is set
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setTimer((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timerRef.current);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
+    if (timer > 0 && !isLoadingTransaction) {
+      timerRef.current = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timerRef.current);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
     
     // Cleanup interval on component unmount or when timer stops
     return () => {
@@ -88,7 +129,7 @@ export default function Photo() {
         clearInterval(timerRef.current);
       }
     };
-  }, []);
+  }, [timer, isLoadingTransaction]); // Added isLoadingTransaction as dependency
 
   useEffect(() => {
     // if (showModal || timer === 0 || totalPhoto === 40) {
@@ -167,6 +208,15 @@ export default function Photo() {
     if (timer === 0) return  "Waktu dalam mengambil foto sudah habis"
     return "Kamu telah menyelesaikan pengambilan foto"
   }, [timer])
+
+  // Show loading state while fetching transaction details
+  if (isLoadingTransaction) {
+    return (
+      <main className="flex flex-col w-screen h-screen bg-black items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </main>
+    )
+  }
 
   return (
     <>
