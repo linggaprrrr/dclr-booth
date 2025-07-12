@@ -22,18 +22,32 @@ export default function Photo() {
   const [photo, setPhoto] = useState('')
   const [transactionData, setTransactionData] = useState<any>(null) // Added state for transaction data
   const [isLoadingTransaction, setIsLoadingTransaction] = useState(true) // Added loading state
+  const [contextLoaded, setContextLoaded] = useState(false) // Track if context has been checked
+  const [shouldStayOnPage, setShouldStayOnPage] = useState(false) // Prevent redirect once we confirm valid transaction
+  const [timerStarted, setTimerStarted] = useState(false) // Track if timer has actually started
   // const [totalPhoto, setTotalPhoto] = useState(0)
   const {transactionId} = useData()
   const {isFullscreen} = useFullscreen()
   const [width, setWidth] = useState(0);
 
-  // Check if transactionId exists, if not redirect to QR page
+
+  // Check transaction ID and redirect only once after a delay
   useEffect(() => {
-    if (!transactionId || transactionId.trim() === '') {
-      push('/');
-      return;
-    }
-  }, [transactionId, push]);
+    const timer = setTimeout(() => {
+      console.log('Final check - transaction ID:', transactionId);
+      setContextLoaded(true);
+      
+      if (!transactionId || transactionId.trim() === '') {
+        console.log('No valid transaction ID after delay, redirecting to QR page');
+        push('/');
+      } else {
+        console.log('Valid transaction ID confirmed:', transactionId);
+        setShouldStayOnPage(true);
+      }
+    }, 300); // Increased delay to ensure context is fully loaded
+    
+    return () => clearTimeout(timer);
+  }, []); // Remove all dependencies to run only once
 
   useEffect(() => {
     setWidth(window.innerHeight);
@@ -47,18 +61,27 @@ export default function Photo() {
       try {
         setIsLoadingTransaction(true);
         const response = await axios.get(`/trx/${transactionId}`);
+        
         const data = response.data;
         
         if (data && data.data && data.data.plan) {
           setTransactionData(data.data);
           // Set timer from plan's durationSecond
-          const durationInSeconds = data.data.plan.durationSecond || 600; // fallback to 600 if not available
+          const planDuration = data.data.plan.durationSecond;
+          
+          const durationInSeconds = planDuration || 600;
+          
           setTimer(durationInSeconds);
+          setTimerStarted(true); // Mark that timer has been set from API
+        } else {
+          setTimer(600);
+          setTimerStarted(true); // Mark that timer has been set (fallback)
         }
       } catch (error) {
         console.error('Error fetching transaction details:', error);
         // Fallback to default timer if API call fails
         setTimer(600);
+        setTimerStarted(true); // Mark that timer has been set (fallback)
       } finally {
         setIsLoadingTransaction(false);
       }
@@ -66,6 +89,24 @@ export default function Photo() {
 
     fetchTransactionDetails();
   }, [transactionId]);
+
+  // Start timer when timer value is set from API
+  useEffect(() => {
+    console.log('Timer useEffect triggered - timer:', timer, 'isLoadingTransaction:', isLoadingTransaction, 'timerRef.current:', !!timerRef.current);
+    if (timer > 0 && !isLoadingTransaction && !timerRef.current) {
+      console.log('Starting timer with:', timer, 'seconds');
+      timerRef.current = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    }
+  }, [timer, isLoadingTransaction]);
 
   useEffect(() => {
     async function getDevices() {
@@ -109,36 +150,26 @@ export default function Photo() {
     };
   }, []);
 
-  // Modified useEffect to start timer only when transaction data is loaded and timer is set
+  // Cleanup timer on component unmount
   useEffect(() => {
-    if (timer > 0 && !isLoadingTransaction) {
-      timerRef.current = setInterval(() => {
-        setTimer((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(timerRef.current);
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
-    
-    // Cleanup interval on component unmount or when timer stops
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
-  }, [timer, isLoadingTransaction]); // Added isLoadingTransaction as dependency
+  }, []);
 
   useEffect(() => {
-    // if (showModal || timer === 0 || totalPhoto === 40) {
-      if (showModal || timer === 0) {
+    console.log('Upload check - showModal:', showModal, 'timer:', timer, 'timerStarted:', timerStarted);
+    // Only trigger upload if timer has actually started and reached 0, or if modal is shown
+    if (showModal || (timer === 0 && timerStarted)) {
+      console.log('Triggering upload due to:', showModal ? 'modal shown' : 'timer finished');
       setTimeout(() => {
         onUpload()
       }, 1000)
     }
-  }, [showModal, timer])
+  }, [showModal, timer, timerStarted])
 
   const handleClick = () => {
     // if (showModalPhotoPreview || showModal || timer === 0 || totalPhoto === 40) return
@@ -196,6 +227,7 @@ export default function Photo() {
           'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
         }
       })
+      setTimerStarted(false)
     } catch (ex) {
       console.log(`ERROR when finish - upload ${ex}`)
     } finally {
@@ -209,8 +241,8 @@ export default function Photo() {
     return "Kamu telah menyelesaikan pengambilan foto"
   }, [timer])
 
-  // Show loading state while fetching transaction details
-  if (isLoadingTransaction) {
+  // Show loading state while fetching transaction details or context loading
+  if (isLoadingTransaction || !contextLoaded) {
     return (
       <main className="flex flex-col w-screen h-screen bg-black items-center justify-center">
         <div className="text-white text-xl">Loading...</div>

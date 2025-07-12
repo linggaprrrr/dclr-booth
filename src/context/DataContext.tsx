@@ -17,7 +17,8 @@ interface Props {
 }
 
 export const DataProvider: React.FC<Props> = (props) => {
-  const [transactionId, setTransactionId] = useState("");
+  // For testing: Replace empty string with your test transaction ID
+  const [transactionId, setTransactionId] = useState("3fb286c9-6ff6-478e-8556-af91e95be418"); // Test transaction ID
 
   return (
     <DataContext.Provider 
