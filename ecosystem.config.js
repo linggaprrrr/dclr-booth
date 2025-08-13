@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
     name: "dclr-photobooth",
-    script: 'sh ./fix-camera-permission.sh && npm run start:all',
+    script: 'sh ./fix-camera-permission.sh && npm run build && npm run start:all',
     watch: '.',
     env: {
       API_URL: "https://dclr-api.digitalcreativelab.id",

@@ -22,14 +22,32 @@ export default function QR() {
   let streamObject: any = null
 
   useEffect(() => {
-    initCameraPermission(navigator, isFullscreen)
-
-    return () => { 
+    initCameraPermission(navigator, isFullscreen);
+  
+    const disableRightClick = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+  
+    const disableOtherClicks = (e: MouseEvent) => {
+      if (e.button !== 0) { // hanya klik kiri yang diperbolehkan
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+  
+    document.addEventListener('contextmenu', disableRightClick);
+    document.addEventListener('mousedown', disableOtherClicks);
+  
+    return () => {
+      document.removeEventListener('contextmenu', disableRightClick);
+      document.removeEventListener('mousedown', disableOtherClicks);
+  
       if (scannerRef.current) {
         scannerRef.current.stop();
       }
     };
   }, [isFullscreen]);
+  
 
   useEffect(() => {
     if (!selectedDeviceId) return
@@ -140,35 +158,20 @@ export default function QR() {
 
   return (
     <main 
-      className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10"
+      className="select-none w-screen h-screen bg-black flex flex-col justify-center items-center gap-10"
       style={{cursor: isFullscreen ? 'none' : ''}}
     >
       <h1 className="text-white font-bold text-3xl">
         Scan QR Code
       </h1>
-
+  
       <div className="w-[50%] h-[30%] relative rounded-xl">
         <video 
           ref={videoRef}
           className="w-full h-full object-cover rounded-xl -scale-x-100" />
         
         {(!isScanning && scanResult) &&
-          <div 
-            className={`
-              absolute 
-              top-0 
-              backdrop-blur-lg 
-              bg-white/20 
-              border 
-              border-white/30 
-              rounded-xl 
-              w-full 
-              h-full
-              flex
-              justify-center
-              items-center
-            `}
-          >
+          <div className="absolute top-0 backdrop-blur-lg bg-white/20 border border-white/30 rounded-xl w-full h-full flex justify-center items-center">
             <LoadingSpinner 
               size={64} 
               strokeWidth={6} 
@@ -177,61 +180,29 @@ export default function QR() {
               speed={0} />
           </div>
         }
-      
-        {(error.length || cameraPermissionError.length) ?
+  
+        {(error.length || cameraPermissionError.length) &&
           <p className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-base font-semibold text-red-400 text-center">
             {error || cameraPermissionError}
           </p>
-          : null
         }
       </div>
+  
+      {/* Inject style properly */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            html, body, * {
+              user-select: none !important;
+              -webkit-user-select: none !important;
+              -moz-user-select: none !important;
+              -ms-user-select: none !important;
+              -webkit-touch-callout: none !important;
+            }
+          `,
+        }}
+      />
     </main>
-
-    // <main 
-    //   className="w-screen h-screen bg-black flex flex-col justify-center items-center gap-10"
-    //   style={{cursor: isFullscreen ? 'none' : ''}}
-    // >
-    //   <h1 className="text-white font-bold text-3xl">
-    //     Scan QR Code
-    //   </h1>
-
-    //   <div className="w-[30%] h-[40%] relative rounded-xl">
-    //     <video 
-    //       ref={videoRef}
-    //       className="w-full h-full object-cover rounded-xl -rotate-90" />
-        
-    //     {(!isScanning && scanResult) &&
-    //       <div 
-    //         className={`
-    //           absolute 
-    //           top-0 
-    //           backdrop-blur-lg 
-    //           bg-white/20 
-    //           border 
-    //           border-white/30 
-    //           rounded-xl 
-    //           w-full 
-    //           h-full
-    //           flex
-    //           justify-center
-    //           items-center
-    //         `}
-    //       >
-    //         <LoadingSpinner 
-    //           size={64} 
-    //           strokeWidth={6} 
-    //           color="#FF7590" 
-    //           secondaryColor="#fff"
-    //           speed={0} />
-    //       </div>
-    //     }
-      
-    //     {error.length &&
-    //       <p className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-base font-semibold text-red-400 text-center">
-    //         {error}
-    //       </p>
-    //     }
-    //   </div>
-    // </main>
   )
+  
 }

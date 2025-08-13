@@ -25,3 +25,11 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+* {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+
+  -webkit-touch-callout: none !important; /* iOS long press */
+}

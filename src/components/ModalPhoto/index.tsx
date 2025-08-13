@@ -23,7 +23,7 @@ const ModalPhotoPreview: React.FC<Props> = (props) => {
           }
           return prevTime - 1;
         });
-      }, 1000);
+      }, 3000);
     }
 
     if (!props.show && timerRef.current) {

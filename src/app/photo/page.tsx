@@ -109,6 +109,19 @@ export default function Photo() {
   }, [timer, isLoadingTransaction]);
 
   useEffect(() => {
+    const disableRightClick = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+  
+    const disableOtherClicks = (e: MouseEvent) => {
+      if (e.button !== 0) { // hanya klik kiri yang diperbolehkan
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+  
+    document.addEventListener('contextmenu', disableRightClick);
+    document.addEventListener('mousedown', disableOtherClicks);
     async function getDevices() {
       try {
         // First request permission to access media devices
@@ -125,8 +138,8 @@ export default function Photo() {
           const newStream = await navigator.mediaDevices.getUserMedia({
             video: {
               deviceId: { exact: videoDevices.deviceId },
-              width: { ideal: 1280 },
-              height: { ideal: 720 }
+              width: { min: 640, ideal: 1280, max: 1920 },
+              height: { min: 480, ideal: 720, max: 1080 }
             }
           });
           
@@ -144,6 +157,8 @@ export default function Photo() {
     getDevices();
     
     return () => {
+      document.removeEventListener('contextmenu', disableRightClick);
+      document.removeEventListener('mousedown', disableOtherClicks);
       if (stream) {
         stream.getTracks().forEach((track: any) => track.stop());
       }
@@ -167,7 +182,7 @@ export default function Photo() {
       console.log('Triggering upload due to:', showModal ? 'modal shown' : 'timer finished');
       setTimeout(() => {
         onUpload()
-      }, 1000)
+      }, 2000)
     }
   }, [showModal, timer, timerStarted])
 
@@ -219,9 +234,16 @@ export default function Photo() {
     setShowModalPhotoPreview(prev => !prev)
   }
 
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      console.log("🎥 Menyambungkan stream ke videoRef");
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream, videoRef.current]);
+
   const onUpload = async () => {
     try {
-      await axios.post(`/api/upload`, {transactionId: transactionId})
+      // await axios.post(`/api/upload`, {transactionId: transactionId})
       await axios.put(`${process.env.NEXT_PUBLIC_REMOTE_SERVER}/transactions/${transactionId}/complete-session`, {}, {
         headers: {
           'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
@@ -286,12 +308,24 @@ export default function Photo() {
             src="/bg.png"
             alt="bacgkroud image" />  
           
+          {/* <div className="fixed inset-0 bg-black flex justify-center items-center overflow-hidden">
+            <video 
+              ref={videoRef}
+              className="h-full object-contain transform rotate-90"
+              autoPlay
+              playsInline
+              muted
+              onCanPlay={() => videoRef.current?.play()}
+            />
+          </div> */}
+
           <div className="absolute top-0 left-0 h-screen w-screen flex justify-center items-center">
             <video 
               ref={videoRef} 
               className="w-auto h-[1000px] max-w-none object-contain rotate-90"
               autoPlay 
               playsInline
+              muted
               onCanPlay={() => videoRef.current?.play()}
             />
           </div>

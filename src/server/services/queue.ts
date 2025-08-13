@@ -49,7 +49,7 @@ const defaultJobOptions: JobOptions = {
 const queueOptions: QueueOptions = {
   defaultJobOptions,
   limiter: {
-    max: 2, // Maximum number of jobs processed concurrently
+    max: 1, // Maximum number of jobs processed concurrently
     duration: 1000, // Per second
   },
 };
@@ -98,7 +98,7 @@ export async function queuePictureUpload(
     trxId
   };
   
-  const job = await queue.add(queuePayload);
+  const job = await queue.add(queuePayload, defaultJobOptions);
   
   console.log(`[UPLOAD] [QUEUED] Picture ${filename} added to upload queue (Job ID: ${job.id})`);
   return job;
