@@ -29,6 +29,7 @@ export default function Photo() {
   const {transactionId} = useData()
   const {isFullscreen} = useFullscreen()
   const [width, setWidth] = useState(0);
+  const [countdown, setCountdown] = useState(0); // ⏱️ Timer countdown sebelum ambil foto
 
 
   // Check transaction ID and redirect only once after a delay
@@ -207,22 +208,55 @@ export default function Photo() {
   const [isFlashing, setIsFlashing] = useState(false);
 
   const onTakePict = async () => {
-    if (showModal || timer === 0 || showModalPhotoPreview || isCapturing) return;
-    setIsCapturing(true);
-    setIsFlashing(true); // 🔥 trigger flash
+    doCapture();
+    // if (showModal || timer === 0 || showModalPhotoPreview || isCapturing) return;
 
-    setTimeout(() => setIsFlashing(false), 300); // hilang setelah 0.3 detik
+    // // ⏱️ Countdown 3..2..1 sebelum ambil foto
+    // setCountdown(3);
+    // let count = 3;
+    // const countdownInterval = setInterval(() => {
+    //   count--;
+    //   if (count === 0) {
+    //     clearInterval(countdownInterval);
+    //     setCountdown(0);
+    //     doCapture();
+    //   } else {
+    //     setCountdown(count);
+    //   }
+    // }, 1000);
+  };
+
+  // pisahkan proses capture-nya agar countdown bisa jalan lebih halus
+  const doCapture = async () => {
+    setIsCapturing(true);
+    setCountdown(4); // mulai dari 5 detik
+    setIsFlashing(true);
+    setTimeout(() => setIsFlashing(false), 300);
+
+    // Jalankan countdown manual
+    let counter = 4;
+    const timer = setInterval(() => {
+      counter--;
+      setCountdown(counter);
+      if (counter <= 0) clearInterval(timer);
+    }, 1000);
 
     try {
       const res = await axios.get(`/api/capture/${transactionId}`);
-      setPhoto(res.data.file.path);
-      setShowModalPhotoPreview(true);
+        setPhoto(res.data.file.path);
+        setShowModalPhotoPreview(true);
+        setIsCapturing(false);
+      // Pastikan loader tetap tampil minimal 5 detik penuh
+      
     } catch (ex) {
       console.error("Error capturing photo:", ex);
-    } finally {
-      setIsCapturing(false);
+      setTimeout(() => {
+        setIsCapturing(false);
+      }, 5000);
     }
   };
+
+
 
 
   const onAbort = async () => {
@@ -339,14 +373,23 @@ export default function Photo() {
           </div>
       </main>
 
+      {/* Loader transparan + timer */}
       {isCapturing && (
-        <div className="absolute inset-0 bg-black bg-opacity-70 flex flex-col items-center justify-center z-[9999]">
-          <div className="animate-pulse text-white text-3xl font-bold mb-4">
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px] flex flex-col items-center justify-center z-[9999]">
+          <div className="text-white text-3xl font-bold mb-2 animate-pulse">
             📸 Sedang mengambil foto...
           </div>
+
+          {countdown > 0 && (
+            <div className="text-white text-6xl font-extrabold mb-4 drop-shadow-lg">
+              {countdown}
+            </div>
+          )}
+
           <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
+
 
       {isFlashing && (
         <div className="absolute inset-0 bg-white animate-[flash_0.3s_ease-in-out] z-[9998]" />
