@@ -1,0 +1,218 @@
+2025-08-19T12:16:17: [AUTO-SETUP] Running initial setup...
+2025-08-19T12:16:17: [AUTO-SETUP] Fixing camera permissions...
+2025-08-19T12:16:19: ❌ USB port not found in gphoto2 output.
+2025-08-19T12:16:19: [AUTO-SETUP] Building application...
+2025-08-19T12:16:19: 
+2025-08-19T12:16:19: > dclr-photoshoot@0.1.0 build
+2025-08-19T12:16:19: > next build
+2025-08-19T12:16:19: 
+2025-08-19T12:16:20:    ▲ Next.js 15.2.0
+2025-08-19T12:16:20:    - Environments: .env
+2025-08-19T12:16:20: 
+2025-08-19T12:16:20:    Creating an optimized production build ...
+2025-08-19T12:16:25:  ✓ Compiled successfully
+2025-08-19T12:16:25:    Linting and checking validity of types ...
+2025-08-19T12:16:28:    Collecting page data ...
+2025-08-19T12:16:29:    Generating static pages (0/7) ...
+2025-08-19T12:16:29:    Generating static pages (1/7) 
+2025-08-19T12:16:29:    Generating static pages (3/7) 
+2025-08-19T12:16:29:    Generating static pages (5/7) 
+2025-08-19T12:16:29:  ✓ Generating static pages (7/7)
+2025-08-19T12:16:30:    Finalizing page optimization ...
+2025-08-19T12:16:30:    Collecting build traces ...
+2025-08-19T12:16:42: 
+2025-08-19T12:16:42: Route (app)                              Size     First Load JS
+2025-08-19T12:16:42: ┌ ○ /                                    7.71 kB         145 kB
+2025-08-19T12:16:42: ├ ○ /_not-found                          978 B           118 kB
+2025-08-19T12:16:42: ├ ○ /api-test                            960 B           118 kB
+2025-08-19T12:16:42: └ ○ /photo                               3.01 kB         140 kB
+2025-08-19T12:16:42: + First Load JS shared by all            117 kB
+2025-08-19T12:16:42:   ├ chunks/4bd1b696-327c35ef8e751f54.js  53 kB
+2025-08-19T12:16:42:   ├ chunks/587-b67440d3cd415c09.js       62.3 kB
+2025-08-19T12:16:42:   └ other shared chunks (total)          1.95 kB
+2025-08-19T12:16:42: 
+2025-08-19T12:16:42: 
+2025-08-19T12:16:42: ○  (Static)  prerendered as static content
+2025-08-19T12:16:42: 
+2025-08-19T12:16:42: [AUTO-SETUP] Setup completed successfully!
+2025-08-19T12:16:42: [SERVER] Starting photobooth server...
+2025-08-19T12:16:42: 
+2025-08-19T12:16:42: > dclr-photoshoot@0.1.0 start
+2025-08-19T12:16:42: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-19T12:16:42: 
+2025-08-19T12:16:47: > Ready on http://localhost:3000
+2025-08-19T12:18:44: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-19T12:18:44: [SERVER] Starting photobooth server...
+2025-08-19T12:18:44: 
+2025-08-19T12:18:44: > dclr-photoshoot@0.1.0 start
+2025-08-19T12:18:44: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-19T12:18:44: 
+2025-08-19T12:18:50: > Ready on http://localhost:3000
+2025-08-19T12:19:18: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-19T12:19:18: [SERVER] Starting photobooth server...
+2025-08-19T12:19:18: 
+2025-08-19T12:19:18: > dclr-photoshoot@0.1.0 start
+2025-08-19T12:19:18: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-19T12:19:18: 
+2025-08-19T12:21:02: > Ready on http://localhost:3000
+2025-08-30T16:59:24: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-30T16:59:24: [SERVER] Starting photobooth server...
+2025-08-30T16:59:24: 
+2025-08-30T16:59:24: > dclr-photoshoot@0.1.0 start
+2025-08-30T16:59:24: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-30T16:59:24: 
+2025-08-30T16:59:30: > Ready on http://localhost:3000
+2025-08-30T23:58:44: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-30T23:58:44: [SERVER] Starting photobooth server...
+2025-08-30T23:58:44: 
+2025-08-30T23:58:44: > dclr-photoshoot@0.1.0 start
+2025-08-30T23:58:44: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-30T23:58:44: 
+2025-08-30T23:58:49: > Ready on http://localhost:3000
+2025-08-31T01:26:24: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-31T01:26:24: [SERVER] Starting photobooth server...
+2025-08-31T01:26:24: 
+2025-08-31T01:26:24: > dclr-photoshoot@0.1.0 start
+2025-08-31T01:26:24: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-31T01:26:24: 
+2025-08-31T01:26:30: > Ready on http://localhost:3000
+2025-08-31T01:48:31: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-31T01:48:31: [SERVER] Starting photobooth server...
+2025-08-31T01:48:31: 
+2025-08-31T01:48:31: > dclr-photoshoot@0.1.0 start
+2025-08-31T01:48:31: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-31T01:48:31: 
+2025-08-31T01:48:35: > Ready on http://localhost:3000
+2025-08-31T01:51:06: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-31T01:51:06: [SERVER] Starting photobooth server...
+2025-08-31T01:51:06: 
+2025-08-31T01:51:06: > dclr-photoshoot@0.1.0 start
+2025-08-31T01:51:06: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-31T01:51:06: 
+2025-08-31T01:51:12: > Ready on http://localhost:3000
+2025-08-31T02:16:57: [AUTO-SETUP] Setup already completed, starting server...
+2025-08-31T02:16:57: [SERVER] Starting photobooth server...
+2025-08-31T02:16:57: 
+2025-08-31T02:16:57: > dclr-photoshoot@0.1.0 start
+2025-08-31T02:16:57: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-08-31T02:16:57: 
+2025-08-31T02:17:02: > Ready on http://localhost:3000
+2025-09-01T21:44:57: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-01T21:44:57: [SERVER] Starting photobooth server...
+2025-09-01T21:44:57: 
+2025-09-01T21:44:57: > dclr-photoshoot@0.1.0 start
+2025-09-01T21:44:57: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-01T21:44:57: 
+2025-09-01T21:45:03: > Ready on http://localhost:3000
+2025-09-01T21:45:31: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-01T21:45:31: [SERVER] Starting photobooth server...
+2025-09-01T21:45:31: 
+2025-09-01T21:45:31: > dclr-photoshoot@0.1.0 start
+2025-09-01T21:45:31: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-01T21:45:31: 
+2025-09-01T21:45:36: > Ready on http://localhost:3000
+2025-09-01T23:16:48: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-01T23:16:48: [SERVER] Starting photobooth server...
+2025-09-01T23:16:48: 
+2025-09-01T23:16:48: > dclr-photoshoot@0.1.0 start
+2025-09-01T23:16:48: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-01T23:16:48: 
+2025-09-01T23:16:54: > Ready on http://localhost:3000
+2025-09-01T23:17:22: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-01T23:17:22: [SERVER] Starting photobooth server...
+2025-09-01T23:17:22: 
+2025-09-01T23:17:22: > dclr-photoshoot@0.1.0 start
+2025-09-01T23:17:22: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-01T23:17:22: 
+2025-09-01T23:17:27: > Ready on http://localhost:3000
+2025-09-01T23:26:49: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-01T23:26:49: [SERVER] Starting photobooth server...
+2025-09-01T23:26:49: 
+2025-09-01T23:26:49: > dclr-photoshoot@0.1.0 start
+2025-09-01T23:26:49: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-01T23:26:49: 
+2025-09-01T23:26:54: > Ready on http://localhost:3000
+2025-09-09T22:04:46: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-09T22:04:46: [SERVER] Starting photobooth server...
+2025-09-09T22:04:46: 
+2025-09-09T22:04:46: > dclr-photoshoot@0.1.0 start
+2025-09-09T22:04:46: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-09T22:04:46: 
+2025-09-09T22:04:52: > Ready on http://localhost:3000
+2025-09-09T22:05:20: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-09T22:05:20: [SERVER] Starting photobooth server...
+2025-09-09T22:05:20: 
+2025-09-09T22:05:20: > dclr-photoshoot@0.1.0 start
+2025-09-09T22:05:20: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-09T22:05:20: 
+2025-09-09T22:05:25: > Ready on http://localhost:3000
+2025-09-09T22:12:10: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-09T22:12:10: [SERVER] Starting photobooth server...
+2025-09-09T22:12:10: 
+2025-09-09T22:12:10: > dclr-photoshoot@0.1.0 start
+2025-09-09T22:12:10: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-09T22:12:10: 
+2025-09-09T22:12:16: > Ready on http://localhost:3000
+2025-09-09T22:12:44: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-09T22:12:44: [SERVER] Starting photobooth server...
+2025-09-09T22:12:44: 
+2025-09-09T22:12:44: > dclr-photoshoot@0.1.0 start
+2025-09-09T22:12:44: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-09T22:12:44: 
+2025-09-09T22:12:48: > Ready on http://localhost:3000
+2025-09-09T22:15:40: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-09T22:15:40: [SERVER] Starting photobooth server...
+2025-09-09T22:15:40: 
+2025-09-09T22:15:40: > dclr-photoshoot@0.1.0 start
+2025-09-09T22:15:40: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-09T22:15:40: 
+2025-09-09T22:15:46: > Ready on http://localhost:3000
+2025-09-09T22:16:14: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-09T22:16:14: [SERVER] Starting photobooth server...
+2025-09-09T22:16:14: 
+2025-09-09T22:16:14: > dclr-photoshoot@0.1.0 start
+2025-09-09T22:16:14: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-09T22:16:14: 
+2025-09-09T22:16:19: > Ready on http://localhost:3000
+2025-09-09T22:19:25: [AUTO-SETUP] Setup already completed, starting server...
+2025-09-09T22:19:25: [SERVER] Starting photobooth server...
+2025-09-09T22:19:25: 
+2025-09-09T22:19:25: > dclr-photoshoot@0.1.0 start
+2025-09-09T22:19:25: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-09-09T22:19:25: 
+2025-09-09T22:19:31: > Ready on http://localhost:3000
+2025-10-21T11:03:04: [AUTO-SETUP] Setup already completed, starting server...
+2025-10-21T11:03:04: [SERVER] Starting photobooth server...
+2025-10-21T11:03:04: 
+2025-10-21T11:03:04: > dclr-photoshoot@0.1.0 start
+2025-10-21T11:03:04: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-10-21T11:03:04: 
+2025-10-21T11:03:11: > Ready on http://localhost:3000
+2025-10-21T11:03:38: [AUTO-SETUP] Setup already completed, starting server...
+2025-10-21T11:03:38: [SERVER] Starting photobooth server...
+2025-10-21T11:03:38: 
+2025-10-21T11:03:38: > dclr-photoshoot@0.1.0 start
+2025-10-21T11:03:38: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-10-21T11:03:38: 
+2025-10-21T11:03:43: > Ready on http://localhost:3000
+2025-10-21T15:01:59: [AUTO-SETUP] Setup already completed, starting server...
+2025-10-21T15:01:59: [SERVER] Starting photobooth server...
+2025-10-21T15:01:59: 
+2025-10-21T15:01:59: > dclr-photoshoot@0.1.0 start
+2025-10-21T15:01:59: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-10-21T15:01:59: 
+2025-10-21T15:02:04: > Ready on http://localhost:3000
+2025-10-22T09:33:02: [AUTO-SETUP] Setup already completed, starting server...
+2025-10-22T09:33:02: [SERVER] Starting photobooth server...
+2025-10-22T09:33:02: 
+2025-10-22T09:33:02: > dclr-photoshoot@0.1.0 start
+2025-10-22T09:33:02: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-10-22T09:33:02: 
+2025-10-22T09:33:08: > Ready on http://localhost:3000
+2025-10-22T09:33:36: [AUTO-SETUP] Setup already completed, starting server...
+2025-10-22T09:33:36: [SERVER] Starting photobooth server...
+2025-10-22T09:33:36: 
+2025-10-22T09:33:36: > dclr-photoshoot@0.1.0 start
+2025-10-22T09:33:36: > NODE_ENV=production ts-node --project tsconfig.server.json src/server/index.ts
+2025-10-22T09:33:36: 
+2025-10-22T09:33:19: > Ready on http://localhost:3000

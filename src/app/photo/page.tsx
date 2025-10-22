@@ -203,19 +203,27 @@ export default function Photo() {
     setTimer(0)
     setShowModal(prevState => !prevState)
   }
+  const [isCapturing, setIsCapturing] = useState(false);
+  const [isFlashing, setIsFlashing] = useState(false);
 
   const onTakePict = async () => {
-    console.log('----',transactionId)
-    // if (showModal || timer === 0 || totalPhoto === 40) return
-    if (showModal || timer === 0) return
+    if (showModal || timer === 0 || showModalPhotoPreview || isCapturing) return;
+    setIsCapturing(true);
+    setIsFlashing(true); // 🔥 trigger flash
+
+    setTimeout(() => setIsFlashing(false), 300); // hilang setelah 0.3 detik
+
     try {
-      const res = await axios.get(`/api/capture/${transactionId}`, {})
-      setPhoto(res.data.file.path)
-      setShowModalPhotoPreview(prev => !prev)
-      // setTotalPhoto(prevState => prevState + 1)
+      const res = await axios.get(`/api/capture/${transactionId}`);
+      setPhoto(res.data.file.path);
+      setShowModalPhotoPreview(true);
     } catch (ex) {
+      console.error("Error capturing photo:", ex);
+    } finally {
+      setIsCapturing(false);
     }
-  }
+  };
+
 
   const onAbort = async () => {
     try {
@@ -246,7 +254,7 @@ export default function Photo() {
       // await axios.post(`/api/upload`, {transactionId: transactionId})
       await axios.put(`${process.env.NEXT_PUBLIC_REMOTE_SERVER}/transactions/${transactionId}/complete-session`, {}, {
         headers: {
-          'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
+          'x-api-key': '1edd8a8400dc9fb35cfa47cda191238e63927fe80072657b4eb3e1206d7dd459'
         }
       })
       setTimerStarted(false)
@@ -331,6 +339,18 @@ export default function Photo() {
           </div>
       </main>
 
+      {isCapturing && (
+        <div className="absolute inset-0 bg-black bg-opacity-70 flex flex-col items-center justify-center z-[9999]">
+          <div className="animate-pulse text-white text-3xl font-bold mb-4">
+            📸 Sedang mengambil foto...
+          </div>
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      {isFlashing && (
+        <div className="absolute inset-0 bg-white animate-[flash_0.3s_ease-in-out] z-[9998]" />
+      )}
       <ModalFinish
         show={showModal || timer === 0}
         message={finishWordingMemo}

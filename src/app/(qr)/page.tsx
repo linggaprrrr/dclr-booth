@@ -60,7 +60,7 @@ export default function QR() {
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && isFullscreen) {
       navigator.mediaDevices.enumerateDevices().then((devices: any) => {
-        const webCam: any = devices.filter((v: any) => v.kind === "videoinput").find((v: any) => v.label.includes("USB Camera") || v.label.includes("UVC"))
+        const webCam: any = devices.filter((v: any) => v.kind === "videoinput").find((v: any) => v.label.includes("USB Camera") || v.label.includes("UVC") || v.label.includes("WEBCAM"))
         console.log(devices)
         if (webCam) {
           setSelectedDeviceId(webCam.deviceId)
@@ -119,7 +119,7 @@ export default function QR() {
       const qrData = data.data
       const res = await axios.put(`${process.env.NEXT_PUBLIC_REMOTE_SERVER}/transactions/${qrData}/start-session`, {}, {
         headers: {
-          'x-api-key': 'sHCEtVx2mVXIa6ZUkigfd'
+          'x-api-key': '1edd8a8400dc9fb35cfa47cda191238e63927fe80072657b4eb3e1206d7dd459'
         }
       })
       if (!res.data || !res.data.data || !res.data.data.status || res.data.data.status !== 'in_booth', res.data.data.status !== 'in_booth') {
